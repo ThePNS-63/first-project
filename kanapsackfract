@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+double fractionalKnapsack(int W, vector<pair<int, int>> items) {
+    // Sort items by value/weight ratio in descending order
+    sort(items.begin(), items.end(), [](const pair<int, int>& a, const pair<int, int>& b) {
+        return (double)a.second / a.first > (double)b.second / b.first;
+    });
+
+    double value = 0.0;
+    int weight = 0;
+
+    for (const auto& item : items) {
+        if (weight + item.first <= W) {
+            weight += item.first;
+            value += item.second;
+        } else {
+            int remainingWeight = W - weight;
+            value += (double)remainingWeight * item.second / item.first;
+            break;
+        }
+    }
+
+    return value;
+}
+
+int main() {
+    int n, W;
+
+    cout << "Enter the number of items: ";
+    cin >> n;
+
+    cout << "Enter the capacity of the knapsack: ";
+    cin >> W;
+
+    vector<pair<int, int>> items(n);
+
+    cout << "Enter the weight and value of each item:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> items[i].first>> items[i].second;
+    }
+
+    double maxValue = fractionalKnapsack(W, items);
+    cout << "Maximum value: " << maxValue << endl;
+
+    return 0;
+}
